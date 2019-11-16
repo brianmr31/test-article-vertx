@@ -13,6 +13,7 @@ import corp.Br1aN.ctrl.article.setting.handlers.AddSettingHandler;
 import corp.Br1aN.ctrl.article.setting.handlers.GetSettingHandler;
 import corp.Br1aN.ctrl.article.setting.handlers.DelSettingHandler;
 import corp.Br1aN.ctrl.article.setting.handlers.PutSettingHandler;
+import corp.Br1aN.ctrl.article.setting.handlers.ListSettingHandler;
 
 public class RouterSetting {
 
@@ -23,6 +24,7 @@ public class RouterSetting {
   private GetSettingHandler getSettingHandler = null;
   private DelSettingHandler delSettingHandler = null;
   private PutSettingHandler putSettingHandler = null;
+  private ListSettingHandler listSettingHandler = null;
 
   public RouterSetting(){
 
@@ -35,6 +37,7 @@ public class RouterSetting {
     this.getSettingHandler = new GetSettingHandler(this.pool);
     this.delSettingHandler = new DelSettingHandler(this.pool);
     this.putSettingHandler = new PutSettingHandler(this.pool);
+    this.listSettingHandler = new ListSettingHandler(this.pool);
   }
 
   public PgPool getpool(){
@@ -51,6 +54,7 @@ public class RouterSetting {
   }
 
   public void createRouter(){
+    this.router.get("/api/v1/settings").handler(this.listSettingHandler);
     this.router.post("/api/v1/setting").handler(this.addSettingHandler);
     this.router.post("/api/v1/setting/:id").handler(this.putSettingHandler);
     this.router.get("/api/v1/setting/:id").handler(this.getSettingHandler);
