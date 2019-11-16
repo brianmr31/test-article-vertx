@@ -1,8 +1,11 @@
 package corp.Br1aN.ctrl.article.setting.modals;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class Setting extends Model {
+
+  private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
   private Long setting_id;
   private String setting_app_company;
@@ -10,9 +13,9 @@ public class Setting extends Model {
   private String setting_data;
   private String setting_type;
   private String setting_created_by;
-	private LocalDateTime setting_created_at;
+	private String setting_created_at;
   private String setting_updated_by;
-  private LocalDateTime setting_updated_at;
+  private String setting_updated_at;
 	private boolean setting_deleted_flag;
 
   public Setting(){
@@ -26,9 +29,13 @@ public class Setting extends Model {
     this.setting_data = setting_data;
     this.setting_type = setting_type;
     this.setting_created_by = setting_created_by;
-    this.setting_created_at = setting_created_at;
+    if( setting_created_at != null ){
+      this.setting_created_at = setting_created_at.format(formatter);
+    }
     this.setting_updated_by = setting_updated_by;
-    this.setting_updated_at = setting_updated_at;
+    if( setting_updated_at != null ){
+      this.setting_updated_at = setting_updated_at.format(formatter);
+    }
     this.setting_deleted_flag = setting_deleted_flag;
   }
 
@@ -71,11 +78,11 @@ public class Setting extends Model {
   public void setSettingCreatedBy(String setting_created_by){
     this.setting_created_by = setting_created_by;
   }
-  public LocalDateTime getSettingCreatedAt(){
+  public String getSettingCreatedAt(){
     return this.setting_created_at;
   }
   public void setSettingCreatedAt(LocalDateTime setting_created_at){
-    this.setting_created_at = setting_created_at;
+    this.setting_created_at = setting_created_at.format(formatter);
   }
 
   public String getSettingUpdatedBy(){
@@ -84,11 +91,11 @@ public class Setting extends Model {
   public void setSettingUpdatedBy(String setting_updated_by){
     this.setting_updated_by = setting_updated_by;
   }
-  public LocalDateTime getSettingUpdatedAt(){
+  public String getSettingUpdatedAt(){
     return this.setting_updated_at;
   }
   public void setSettingUpdatedAt(LocalDateTime setting_updated_at){
-    this.setting_updated_at = setting_updated_at;
+    this.setting_updated_at = setting_updated_at.format(formatter);
   }
 
   public boolean getSettingDeletedFlag(){
