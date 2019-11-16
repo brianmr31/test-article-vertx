@@ -46,7 +46,7 @@ public class Setting extends Model {
     this.setting_id = setting_id;
   }
 
-  public String getSettingAppType(){
+  public String getSettingAppCompany(){
     return this.setting_app_company;
   }
   public void setSettingAppCompany(String setting_app_company){
