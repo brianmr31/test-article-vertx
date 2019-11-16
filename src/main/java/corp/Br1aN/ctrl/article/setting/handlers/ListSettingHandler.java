@@ -22,29 +22,60 @@ public class ListSettingHandler implements Handler<RoutingContext> {
 
   private static final String LIST_SETTING = "SELECT setting_id, setting_app_company, setting_name, setting_data, setting_type, setting_created_by," +
                             "setting_created_at, setting_updated_by, setting_updated_at, setting_deleted_flag FROM public.setting ";
-
-  private static final String STANDARD_QUERY = " order by $1 limit $2 offset $3 ";
+  private static final String STANDARD_QUERY = " limit $1 offset $2 ";
   private JsonObject dataResponse = null;
 
   private PgPool pool = null;
+
+  private String finalQuery = "";
+  private int limit = 0;
+  private int offset = 0;
+  private String order = "";
+  private String where = "";
+  private Tuple data ;
 
   public ListSettingHandler(PgPool pool){
     this.pool = pool;
   }
   public void handle(RoutingContext context) {
     this.pool.getConnection( ar -> {
+
+      List<String> paramLimit = context.queryParam("size");
+      if( paramLimit.isEmpty() ){
+        this.limit = 10;
+      }else{
+        this.limit = Integer.parseInt(paramLimit.get(0));
+      }
+      List<String> paramsOffset = context.queryParam("page");
+      if( paramsOffset.isEmpty() ){
+        this.offset = 0;
+      }else{
+        this.offset = Integer.parseInt(paramsOffset.get(0));
+      }
+      List<String> paramsOrder = context.queryParam("order");
+      if( paramsOrder.isEmpty() ){
+        this.order = " setting_id asc ";
+      }else{
+        System.out.println("paramsOrder "+paramsOrder.get(0));
+        this.order = paramsOrder.get(0);
+      }
+      this.data = Tuple.of( this.limit, this.offset);
+      List<String> paramsWhere = context.queryParam("where");
+      if( paramsWhere.isEmpty() ){
+        this.where = " ";
+        this.finalQuery = LIST_SETTING + " order by " + this.order + STANDARD_QUERY;
+      }else{
+        System.out.println("paramsWhere "+paramsWhere.get(0));
+        this.where = paramsWhere.get(0);
+        this.finalQuery = LIST_SETTING+" where "+this.where+" order by "+this.order+STANDARD_QUERY;
+      }
       HttpServerResponse response = context.response();
       JsonObject dataResponse = null;
 
-      int limit = 10;
-      int offset = 0;
-      String where = "";
-      String order = "setting_id asc";
-
       if (ar.succeeded()) {
         SqlConnection conn = ar.result();
-        Tuple data = Tuple.of( order, limit, offset);
-        conn.preparedQuery( LIST_SETTING + STANDARD_QUERY, data, ar2 -> {
+
+        conn.preparedQuery( this.finalQuery, this.data, ar2 -> {
           if (ar2.succeeded()) {
             RowSet<Row> rows = ar2.result();
             List<Setting> setting = new ArrayList<Setting>() ;
