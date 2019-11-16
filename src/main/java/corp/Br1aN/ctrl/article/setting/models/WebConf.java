@@ -7,7 +7,7 @@ import corp.Br1aN.ctrl.article.master.models.Model;
 
 public class WebConf extends Model {
 
-  private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+  private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
   private String setting_name;
   private String setting_data;

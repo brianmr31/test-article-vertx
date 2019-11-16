@@ -7,7 +7,7 @@ import corp.Br1aN.ctrl.article.master.models.Model;
 
 public class Setting extends Model {
 
-  private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+  private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
   private Long setting_id;
   private String setting_app_company;
