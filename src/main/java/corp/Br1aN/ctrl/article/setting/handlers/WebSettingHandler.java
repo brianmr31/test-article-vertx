@@ -16,7 +16,7 @@ import io.vertx.sqlclient.SqlConnection;
 import io.vertx.sqlclient.RowSet;
 import io.vertx.sqlclient.Row;
 
-import corp.Br1aN.ctrl.article.setting.modals.WebConf;
+import corp.Br1aN.ctrl.article.setting.models.WebConf;
 
 public class WebSettingHandler implements Handler<RoutingContext> {
 

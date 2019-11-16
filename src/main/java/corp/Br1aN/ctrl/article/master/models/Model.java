@@ -1,4 +1,4 @@
-package corp.Br1aN.ctrl.article.setting.modals;
+package corp.Br1aN.ctrl.article.master.models;
 
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;

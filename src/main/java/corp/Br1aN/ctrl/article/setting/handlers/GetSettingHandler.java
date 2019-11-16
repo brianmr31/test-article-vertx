@@ -13,7 +13,7 @@ import io.vertx.sqlclient.SqlConnection;
 import io.vertx.sqlclient.RowSet;
 import io.vertx.sqlclient.Row;
 
-import corp.Br1aN.ctrl.article.setting.modals.Setting;
+import corp.Br1aN.ctrl.article.setting.models.Setting;
 
 public class GetSettingHandler implements Handler<RoutingContext> {
 

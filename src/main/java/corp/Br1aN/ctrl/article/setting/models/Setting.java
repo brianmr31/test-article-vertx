@@ -1,7 +1,9 @@
-package corp.Br1aN.ctrl.article.setting.modals;
+package corp.Br1aN.ctrl.article.setting.models;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+
+import corp.Br1aN.ctrl.article.master.models.Model;
 
 public class Setting extends Model {
 
