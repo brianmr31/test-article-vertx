@@ -16,12 +16,11 @@ import io.vertx.sqlclient.SqlConnection;
 import io.vertx.sqlclient.RowSet;
 import io.vertx.sqlclient.Row;
 
-import corp.Br1aN.ctrl.article.company.models.Company;
+import corp.Br1aN.ctrl.article.company.models.WebCom;
 
-public class ListCompanyHandler implements Handler<RoutingContext> {
+public class WebCompanyHandler implements Handler<RoutingContext> {
 
-  private static final String LIST_COMPANY = "SELECT company_id, company_name, company_owner, company_status, company_valid_from, company_valid_to, company_created_by, company_created_at, " +
-                            "company_updated_by, company_updated_at, company_deleted_flag FROM public.company ";
+  private static final String LIST_COMPANY = "SELECT company_id, company_name, company_owner FROM public.company ";
   private static final String LIST_COUNT_COMPANY = "SELECT count(company_id) as count FROM public.company ";
   private static final String STANDARD_QUERY = " limit $1 offset $2 ";
   private JsonObject dataResponse = null;
@@ -38,7 +37,7 @@ public class ListCompanyHandler implements Handler<RoutingContext> {
 
   private SqlConnection conn;
 
-  public ListCompanyHandler(PgPool pool){
+  public WebCompanyHandler(PgPool pool){
     this.pool = pool;
   }
   public void handle(RoutingContext context) {
@@ -67,13 +66,13 @@ public class ListCompanyHandler implements Handler<RoutingContext> {
       List<String> paramsWhere = context.queryParam("where");
       if( paramsWhere.isEmpty() ){
         this.where = " ";
-        this.finalQuery = LIST_COMPANY + " order by " + this.order + STANDARD_QUERY;
-        this.totalFinalQuery = LIST_COUNT_COMPANY;
+        this.finalQuery = LIST_COMPANY + " where company_status = 'aktif' and company_valid_from <= now() and company_valid_to >= now() " + " order by " + this.order + STANDARD_QUERY;
+        this.totalFinalQuery = LIST_COUNT_COMPANY+ " where company_status = 'aktif' and company_valid_from <= now() and company_valid_to >= now() ";
       }else{
         System.out.println("paramsWhere "+paramsWhere.get(0));
         this.where = paramsWhere.get(0);
-        this.finalQuery = LIST_COMPANY+" where "+this.where+" order by "+this.order+STANDARD_QUERY;
-        this.totalFinalQuery = LIST_COUNT_COMPANY+" where "+this.where;
+        this.finalQuery = LIST_COMPANY+" where company_status = 'aktif' and company_valid_from <= now() and company_valid_to >= now() and "+this.where+" order by "+this.order+STANDARD_QUERY;
+        this.totalFinalQuery = LIST_COUNT_COMPANY+" where company_status = 'aktif' and company_valid_from <= now() and company_valid_to >= now() and "+this.where;
       }
       HttpServerResponse response = context.response();
 
@@ -86,10 +85,9 @@ public class ListCompanyHandler implements Handler<RoutingContext> {
               this.dataResponse = new JsonObject().put("msg", "ok").put("code","ok").put("data", new JsonObject().put("content", "false").put("total", 0) );
               response.setStatusCode(200).putHeader("content-type", "application/json").end(this.dataResponse.encodePrettily());
             }else {
-              List<Company> company = new ArrayList<Company>() ;
+              List<WebCom> company = new ArrayList<WebCom>() ;
               for (Row row : rows) {
-                company.add( new Company(row.getLong(0), row.getString(1), row.getString(2), row.getString(3), row.getLocalDateTime(4), row.getLocalDateTime(5), row.getString(6), row.getLocalDateTime(7),
-                    row.getString(8), row.getLocalDateTime(9), row.getBoolean(10) ) );
+                company.add( new WebCom(row.getLong(0), row.getString(1), row.getString(2) ) );
               }
               this.conn.query( this.totalFinalQuery, ar3 -> {
                 RowSet<Row> counts = ar3.result();

@@ -14,6 +14,7 @@ import corp.Br1aN.ctrl.article.company.handlers.GetCompanyHandler;
 import corp.Br1aN.ctrl.article.company.handlers.DelCompanyHandler;
 import corp.Br1aN.ctrl.article.company.handlers.PutCompanyHandler;
 import corp.Br1aN.ctrl.article.company.handlers.ListCompanyHandler;
+import corp.Br1aN.ctrl.article.company.handlers.WebCompanyHandler;
 
 public class RouterCompany {
 
@@ -25,6 +26,7 @@ public class RouterCompany {
   private DelCompanyHandler delCompanyHandler = null;
   private PutCompanyHandler putCompanyHandler = null;
   private ListCompanyHandler listCompanyHandler = null;
+  private WebCompanyHandler webCompanyHandler = null;
 
   public RouterCompany(){
 
@@ -38,6 +40,7 @@ public class RouterCompany {
     this.delCompanyHandler = new DelCompanyHandler(this.pool);
     this.putCompanyHandler = new PutCompanyHandler(this.pool);
     this.listCompanyHandler = new ListCompanyHandler(this.pool);
+    this.webCompanyHandler = new WebCompanyHandler(this.pool);
   }
 
   public PgPool getpool(){
@@ -55,6 +58,7 @@ public class RouterCompany {
 
   public void createRouter(){
     this.router.get("/api/v1/companis").handler(this.listCompanyHandler);
+    this.router.get("/api/v1/webcoms").handler(this.webCompanyHandler);
     this.router.post("/api/v1/company").handler(this.addCompanyHandler);
     this.router.post("/api/v1/company/:id").handler(this.putCompanyHandler);
     this.router.get("/api/v1/company/:id").handler(this.getCompanyHandler);

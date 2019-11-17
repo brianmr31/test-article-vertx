@@ -83,8 +83,8 @@ public class ListSettingHandler implements Handler<RoutingContext> {
           if (ar2.succeeded()) {
             RowSet<Row> rows = ar2.result();
             if( rows.size() == 0 ){
-              this.dataResponse = new JsonObject().put("msg", "data is missing ").put("code","data_is_missing").put("data",false);
-              response.setStatusCode(500).putHeader("content-type", "application/json").end(this.dataResponse.encodePrettily());
+              this.dataResponse = new JsonObject().put("msg", "ok").put("code","ok").put("data", new JsonObject().put("content", "false").put("total", 0) );
+              response.setStatusCode(200).putHeader("content-type", "application/json").end(this.dataResponse.encodePrettily());
             }else {
               List<Setting> setting = new ArrayList<Setting>() ;
               for (Row row : rows) {
