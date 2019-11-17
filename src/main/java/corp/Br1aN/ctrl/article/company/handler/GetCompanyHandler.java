@@ -17,8 +17,8 @@ import corp.Br1aN.ctrl.article.company.models.Company;
 
 public class GetCompanyHandler implements Handler<RoutingContext> {
 
-  private static final String GET_COMPANY = "SELECT company_id, company_name, company_owner, company_valid_from, company_valid_to, company_created_by, company_created_at, "+
-    "company_updated_by, company_updated_at, company_deleted_flag FROM public.company WHERE company_id=$1 and company_deleted_flag = false limit 1";
+  private static final String GET_COMPANY = "SELECT company_id, company_name, company_owner, company_status, company_valid_from, company_valid_to, company_created_by, company_created_at, "+
+    "company_updated_by, company_updated_at, company_deleted_flag FROM public.company WHERE company_id=$1 limit 1";
 
   private JsonObject dataResponse = null;
 
@@ -42,8 +42,8 @@ public class GetCompanyHandler implements Handler<RoutingContext> {
             }else {
               Company company = null ;
               for (Row row : rows) {
-                company = new Company(row.getLong(0), row.getString(1), row.getString(2), row.getLocalDateTime(3), row.getLocalDateTime(4), row.getString(5), row.getLocalDateTime(6),
-                    row.getString(7), row.getLocalDateTime(8), row.getBoolean(9) );
+                company = new Company(row.getLong(0), row.getString(1), row.getString(2), row.getString(3), row.getLocalDateTime(4), row.getLocalDateTime(5), row.getString(6), row.getLocalDateTime(7),
+                    row.getString(8), row.getLocalDateTime(9), row.getBoolean(10) );
               }
               this.dataResponse = new JsonObject().put("msg", "ok").put("code","ok").put("data", company.toJsonObject() );
               response.setStatusCode(200).putHeader("content-type", "application/json").end(this.dataResponse.encodePrettily());

@@ -12,6 +12,7 @@ public class Company extends Model {
   private Long company_id;
   private String company_name;
   private String company_owner;
+  private String company_status;
   private String company_valid_from;
   private String company_valid_to;
   private String company_created_by;
@@ -23,11 +24,12 @@ public class Company extends Model {
   public Company(){
 
   }
-  public Company(Long company_id, String company_name, String company_owner, LocalDateTime company_valid_from, LocalDateTime company_valid_to, String company_created_by,
+  public Company(Long company_id, String company_name, String company_owner, String company_status, LocalDateTime company_valid_from, LocalDateTime company_valid_to, String company_created_by,
       LocalDateTime company_created_at, String company_updated_by, LocalDateTime company_updated_at, boolean company_deleted_flag){
     this.company_id = company_id;
     this.company_name = company_name;
     this.company_owner = company_owner;
+    this.company_status = company_status;
     this.company_valid_from = company_valid_from.format(formatter);
     this.company_valid_to = company_valid_to.format(formatter);
     this.company_created_by = company_created_by;
@@ -59,6 +61,12 @@ public class Company extends Model {
   }
   public void setCompanyOwner(String company_owner){
     this.company_owner = company_owner;
+  }
+  public String getCompanyStatus(){
+    return this.company_status;
+  }
+  public void setCompanyStatus(String company_status){
+    this.company_status = company_status;
   }
 
   public String getCompanyValidFrom(){

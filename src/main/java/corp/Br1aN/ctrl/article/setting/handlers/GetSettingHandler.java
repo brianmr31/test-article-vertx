@@ -18,7 +18,7 @@ import corp.Br1aN.ctrl.article.setting.models.Setting;
 public class GetSettingHandler implements Handler<RoutingContext> {
 
   private static final String GET_SETTING = "SELECT setting_id, setting_app_company, setting_name, setting_data, setting_type, setting_created_by, setting_created_at, setting_updated_by, setting_updated_at, "+
-                                "setting_deleted_flag from setting where setting_id = $1 and setting_deleted_flag = false limit 1";
+                                "setting_deleted_flag from setting where setting_id = $1 limit 1";
 
   private JsonObject dataResponse = null;
 

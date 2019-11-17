@@ -11,9 +11,13 @@ import io.vertx.ext.web.RoutingContext;
 import io.vertx.sqlclient.Tuple;
 import io.vertx.sqlclient.SqlConnection;
 
-public class PutCompanyHandler implements Handler<RoutingContext> {
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
-  private static final String DEL_SETTING = "DELETE FROM public.setting WHERE setting_id=$1 ";
+public class PutCompanyHandler implements Handler<RoutingContext> {
+  private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+  private static final String PUT_COMPANY = "UPDATE public.company SET company_name=$2, company_owner=$3, company_status=$4, company_valid_to=$5, company_valid_from=$6, company_updated_by=$7, "+
+                                      "company_updated_at=Now() WHERE company_id=$1";
 
   private JsonObject dataResponse = null;
 
@@ -36,6 +40,10 @@ public class PutCompanyHandler implements Handler<RoutingContext> {
           this.dataResponse = new JsonObject().put("msg", "company data is params missing").put("code","err_company_add").put("data",false);
           response.setStatusCode(400).putHeader("content-type", "application/json").end(this.dataResponse.encodePrettily());
         }
+        if( dataRequest.containsKey("status") == false ){
+          this.dataResponse = new JsonObject().put("msg", "company status to is params missing").put("code","err_company_add").put("data",false);
+          response.setStatusCode(400).putHeader("content-type", "application/json").end(this.dataResponse.encodePrettily());
+        }
         if( dataRequest.containsKey("valid_to") == false ){
           this.dataResponse = new JsonObject().put("msg", "company valid to is params missing").put("code","err_company_add").put("data",false);
           response.setStatusCode(400).putHeader("content-type", "application/json").end(this.dataResponse.encodePrettily());
@@ -50,8 +58,9 @@ public class PutCompanyHandler implements Handler<RoutingContext> {
         }
 
         SqlConnection conn = ar.result();
-        Tuple data = Tuple.of( Integer.parseInt(context.request().getParam("id")) );
-        conn.preparedQuery( DEL_SETTING, data, ar2 -> {
+        Tuple data = Tuple.of(Integer.parseInt(context.request().getParam("id")), dataRequest.getValue("name"), dataRequest.getValue("ower"), dataRequest.getValue("status"),
+              LocalDateTime.parse(dataRequest.getString("valid_to"), formatter), LocalDateTime.parse(dataRequest.getString("valid_from"), formatter), dataRequest.getValue("username") );
+        conn.preparedQuery( PUT_COMPANY, data, ar2 -> {
           if (ar2.succeeded()) {
             this.dataResponse = new JsonObject().put("msg", "ok").put("code","ok").put("data", false );
             response.setStatusCode(200).putHeader("content-type", "application/json").end(this.dataResponse.encodePrettily());
