@@ -83,21 +83,26 @@ public class ListSettingHandler implements Handler<RoutingContext> {
         this.conn.preparedQuery( this.finalQuery, this.data, ar2 -> {
           if (ar2.succeeded()) {
             RowSet<Row> rows = ar2.result();
-            List<Setting> setting = new ArrayList<Setting>() ;
-            for (Row row : rows) {
-              setting.add(new Setting(row.getLong(0), row.getString(1), row.getString(2), row.getString(3), row.getString(4), row.getString(5), row.getLocalDateTime(6),
-                  row.getString(7), row.getLocalDateTime(8), row.getBoolean(9) ) );
-            }
-            this.conn.query( this.totalFinalQuery, ar3 -> {
-              RowSet<Row> counts = ar3.result();
-              Long total = 0L;
-              for (Row row : counts) {
-                total = row.getLong(0) ;
-                // System.out.println("total "+row.getLong(0));
+            if( rows.size() == 0 ){
+              this.dataResponse = new JsonObject().put("msg", "data is missing ").put("code","data_is_missing").put("data",false);
+              response.setStatusCode(500).putHeader("content-type", "application/json").end(this.dataResponse.encodePrettily());
+            }else {
+              List<Setting> setting = new ArrayList<Setting>() ;
+              for (Row row : rows) {
+                setting.add(new Setting(row.getLong(0), row.getString(1), row.getString(2), row.getString(3), row.getString(4), row.getString(5), row.getLocalDateTime(6),
+                    row.getString(7), row.getLocalDateTime(8), row.getBoolean(9) ) );
               }
-              this.dataResponse = new JsonObject().put("msg", "ok").put("code","ok").put("data", new JsonObject().put("content", setting).put("total", total) );
-              response.setStatusCode(200).putHeader("content-type", "application/json").end(this.dataResponse.encodePrettily());
-            });
+              this.conn.query( this.totalFinalQuery, ar3 -> {
+                RowSet<Row> counts = ar3.result();
+                Long total = 0L;
+                for (Row row : counts) {
+                  total = row.getLong(0) ;
+                  // System.out.println("total "+row.getLong(0));
+                }
+                this.dataResponse = new JsonObject().put("msg", "ok").put("code","ok").put("data", new JsonObject().put("content", setting).put("total", total) );
+                response.setStatusCode(200).putHeader("content-type", "application/json").end(this.dataResponse.encodePrettily());
+              });
+            }
           }else{
             System.out.println("Failure: " + ar2.cause().getMessage());
             this.dataResponse = new JsonObject().put("msg", "data is missing ").put("code","data_is_missing").put("data",false);

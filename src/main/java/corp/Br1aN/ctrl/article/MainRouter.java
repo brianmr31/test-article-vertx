@@ -10,6 +10,7 @@ import io.vertx.pgclient.PgPool;
 import io.vertx.core.json.JsonObject;
 
 import corp.Br1aN.ctrl.article.setting.RouterSetting;
+import corp.Br1aN.ctrl.article.company.RouterCompany;
 import corp.Br1aN.ctrl.article.Connection;
 
 public class MainRouter {
@@ -18,6 +19,7 @@ public class MainRouter {
   private PgPool pool = null;
 
   private RouterSetting routerSetting = null;
+  private RouterCompany routerCompany = null;
 
   private Connection connection = null;
 
@@ -48,7 +50,9 @@ public class MainRouter {
     this.router.route().handler(BodyHandler.create());
     this.routerSetting = new RouterSetting(this.router, this.pool);
     this.routerSetting.createRouter();
-    this.setRouter(this.routerSetting.getRouter());
+    this.routerCompany = new RouterCompany(this.routerSetting.getRouter(), this.pool);
+    this.routerCompany.createRouter();
+    this.setRouter(this.routerCompany.getRouter());
   }
 
 }
