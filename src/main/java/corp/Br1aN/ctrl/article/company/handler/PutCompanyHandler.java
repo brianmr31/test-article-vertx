@@ -24,9 +24,31 @@ public class PutCompanyHandler implements Handler<RoutingContext> {
   }
   public void handle(RoutingContext context) {
     this.pool.getConnection( ar -> {
+      JsonObject dataRequest = context.getBodyAsJson();
       HttpServerResponse response = context.response();
-      JsonObject dataResponse = null;
       if (ar.succeeded()) {
+
+        if( dataRequest.containsKey("name") == false ){
+          this.dataResponse = new JsonObject().put("msg", "company name is params missing").put("code","err_company_add").put("data",false);
+          response.setStatusCode(400).putHeader("content-type", "application/json").end(this.dataResponse.encodePrettily());
+        }
+        if( dataRequest.containsKey("ower") == false ){
+          this.dataResponse = new JsonObject().put("msg", "company data is params missing").put("code","err_company_add").put("data",false);
+          response.setStatusCode(400).putHeader("content-type", "application/json").end(this.dataResponse.encodePrettily());
+        }
+        if( dataRequest.containsKey("valid_to") == false ){
+          this.dataResponse = new JsonObject().put("msg", "company valid to is params missing").put("code","err_company_add").put("data",false);
+          response.setStatusCode(400).putHeader("content-type", "application/json").end(this.dataResponse.encodePrettily());
+        }
+        if( dataRequest.containsKey("valid_from") == false ){
+          this.dataResponse = new JsonObject().put("msg", "company valid from is params missing").put("code","err_company_add").put("data",false);
+          response.setStatusCode(400).putHeader("content-type", "application/json").end(this.dataResponse.encodePrettily());
+        }
+        if( dataRequest.containsKey("username") == false ){
+          this.dataResponse = new JsonObject().put("msg", "username is params missing").put("code","err_company_add").put("data",false);
+          response.setStatusCode(400).putHeader("content-type", "application/json").end(this.dataResponse.encodePrettily());
+        }
+
         SqlConnection conn = ar.result();
         Tuple data = Tuple.of( Integer.parseInt(context.request().getParam("id")) );
         conn.preparedQuery( DEL_SETTING, data, ar2 -> {

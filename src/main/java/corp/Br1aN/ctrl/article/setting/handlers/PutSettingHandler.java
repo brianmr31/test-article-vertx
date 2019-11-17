@@ -26,7 +26,6 @@ public class PutSettingHandler implements Handler<RoutingContext> {
     this.pool.getConnection( ar -> {
       HttpServerResponse response = context.response();
       JsonObject dataRequest = context.getBodyAsJson();
-      JsonObject dataResponse = null;
       if (ar.succeeded()) {
         SqlConnection conn = ar.result();
         Tuple data = Tuple.of(Integer.parseInt(context.request().getParam("id")), dataRequest.getValue("app_company"), dataRequest.getValue("name"), dataRequest.getValue("data"), dataRequest.getValue("type"), dataRequest.getValue("username") );

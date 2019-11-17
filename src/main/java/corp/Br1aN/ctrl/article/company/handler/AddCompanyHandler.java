@@ -54,7 +54,6 @@ public class AddCompanyHandler implements Handler<RoutingContext> {
         response.setStatusCode(400).putHeader("content-type", "application/json").end(this.dataResponse.encodePrettily());
       }
 
-      JsonObject dataResponse = null;
       if (ar.succeeded()) {
         SqlConnection conn = ar.result();
         Tuple data = Tuple.of(dataRequest.getValue("name"), dataRequest.getValue("ower"), LocalDateTime.parse(dataRequest.getString("valid_to"), formatter),

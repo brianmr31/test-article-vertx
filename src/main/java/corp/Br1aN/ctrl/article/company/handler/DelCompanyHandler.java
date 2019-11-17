@@ -25,7 +25,6 @@ public class DelCompanyHandler implements Handler<RoutingContext> {
   public void handle(RoutingContext context) {
     this.pool.getConnection( ar -> {
       HttpServerResponse response = context.response();
-      JsonObject dataResponse = null;
       if (ar.succeeded()) {
         SqlConnection conn = ar.result();
         Tuple data = Tuple.of( Integer.parseInt(context.request().getParam("id")) );

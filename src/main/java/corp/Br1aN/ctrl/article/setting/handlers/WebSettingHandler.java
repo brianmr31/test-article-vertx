@@ -75,7 +75,6 @@ public class WebSettingHandler implements Handler<RoutingContext> {
         this.totalFinalQuery = LIST_COUNT_SETTING+" where setting_app_company = '"+setting_app_company+"' and setting_deleted_flag = false and "+this.where;
       }
       HttpServerResponse response = context.response();
-      JsonObject dataResponse = null;
 
       if (ar.succeeded()) {
         this.conn = ar.result();

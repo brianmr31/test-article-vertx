@@ -76,7 +76,6 @@ public class ListSettingHandler implements Handler<RoutingContext> {
         this.totalFinalQuery = LIST_COUNT_SETTING+" where "+this.where;
       }
       HttpServerResponse response = context.response();
-      JsonObject dataResponse = null;
 
       if (ar.succeeded()) {
         this.conn = ar.result();
