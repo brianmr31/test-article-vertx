@@ -33,9 +33,13 @@ public class Category extends Model {
         this.category_parent_id = category_parent_id;
         this.category_queue = category_queue;
         this.category_created_by = category_created_by;
-        this.category_created_at = category_created_at.format(formatter);
+        if( category_created_at != null ){
+          this.category_created_at = category_created_at.format(formatter);
+        }
         this.category_updated_by = category_updated_by;
-        this.category_updated_at = category_updated_at.format(formatter);
+        if( category_updated_at != null ){
+          this.category_updated_at = category_updated_at.format(formatter);
+        }
         this.category_deleted_flag = category_deleted_flag;
   }
 

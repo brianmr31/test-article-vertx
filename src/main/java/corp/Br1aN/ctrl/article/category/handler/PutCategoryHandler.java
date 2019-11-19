@@ -30,6 +30,10 @@ public class PutCategoryHandler implements Handler<RoutingContext> {
     this.pool.getConnection( ar -> {
       JsonObject dataRequest = context.getBodyAsJson();
       HttpServerResponse response = context.response();
+
+      String parent = null;
+      int queue = 0;
+
       if (ar.succeeded()) {
 
         if( dataRequest.containsKey("name") == false ){
@@ -45,8 +49,8 @@ public class PutCategoryHandler implements Handler<RoutingContext> {
           response.setStatusCode(400).putHeader("content-type", "application/json").end(this.dataResponse.encodePrettily());
         }
         if( dataRequest.containsKey("parent_id") == false ){
-          this.dataResponse = new JsonObject().put("msg", "category valid to is params missing").put("code","err_category_add").put("data",false);
-          response.setStatusCode(400).putHeader("content-type", "application/json").end(this.dataResponse.encodePrettily());
+          parent = dataRequest.getString("parent_id");
+          queue = queue + 1;
         }
         if( dataRequest.containsKey("username") == false ){
           this.dataResponse = new JsonObject().put("msg", "username is params missing").put("code","err_category_add").put("data",false);
@@ -55,7 +59,7 @@ public class PutCategoryHandler implements Handler<RoutingContext> {
 
         SqlConnection conn = ar.result();
         Tuple data = Tuple.of(Integer.parseInt(context.request().getParam("id")), dataRequest.getValue("name"), dataRequest.getValue("type"), dataRequest.getValue("app_company"),
-              dataRequest.getString("parent_id"), dataRequest.getValue("username") );
+              parent, queue, dataRequest.getValue("username") );
         conn.preparedQuery( PUT_CATEGORY, data, ar2 -> {
           if (ar2.succeeded()) {
             this.dataResponse = new JsonObject().put("msg", "ok").put("code","ok").put("data", false );

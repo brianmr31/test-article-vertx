@@ -18,7 +18,7 @@ public class AddCategoryHandler implements Handler<RoutingContext> {
 
   private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-  private static final String INSERT_CATEGORY = "INSERT INTO public.company ( category_name, category_type, category_app_company, category_parent_id, category_queue, category_created_by, category_created_at,"+
+  private static final String INSERT_CATEGORY = "INSERT INTO public.category ( category_name, category_type, category_app_company, category_parent_id, category_queue, category_created_by, category_created_at,"+
                                     "category_updated_by, category_updated_at, category_deleted_flag) VALUES( $1, $2, $3, $4, $5, $6, NOW(), null, null, false)";
 
   private JsonObject dataResponse = null;
@@ -32,7 +32,8 @@ public class AddCategoryHandler implements Handler<RoutingContext> {
     this.pool.getConnection( ar -> {
       JsonObject dataRequest = context.getBodyAsJson();
       HttpServerResponse response = context.response();
-
+      String parent = null;
+      int queue = 0;
       if( dataRequest.containsKey("name") == false ){
         this.dataResponse = new JsonObject().put("msg", "category name is params missing").put("code","err_category_add").put("data",false);
         response.setStatusCode(400).putHeader("content-type", "application/json").end(this.dataResponse.encodePrettily());
@@ -45,9 +46,9 @@ public class AddCategoryHandler implements Handler<RoutingContext> {
         this.dataResponse = new JsonObject().put("msg", "category app_company is params missing").put("code","err_category_add").put("data",false);
         response.setStatusCode(400).putHeader("content-type", "application/json").end(this.dataResponse.encodePrettily());
       }
-      if( dataRequest.containsKey("parent_id") == false ){
-        this.dataResponse = new JsonObject().put("msg", "category parent_id is params missing").put("code","err_category_add").put("data",false);
-        response.setStatusCode(400).putHeader("content-type", "application/json").end(this.dataResponse.encodePrettily());
+      if( dataRequest.containsKey("parent_id") != false ){
+        parent = dataRequest.getString("parent_id");
+        queue = queue + 1;
       }
       if( dataRequest.containsKey("username") == false ){
         this.dataResponse = new JsonObject().put("msg", "username is params missing").put("code","err_category_add").put("data",false);
@@ -57,7 +58,7 @@ public class AddCategoryHandler implements Handler<RoutingContext> {
       if (ar.succeeded()) {
         SqlConnection conn = ar.result();
         Tuple data = Tuple.of(dataRequest.getValue("name"), dataRequest.getValue("type"), dataRequest.getString("app_company"),
-                  dataRequest.getString("parent_id"), dataRequest.getValue("username"));
+                  parent, queue, dataRequest.getValue("username"));
         conn.preparedQuery( INSERT_CATEGORY, data, ar2 -> {
           if (ar2.succeeded()) {
             this.dataResponse = new JsonObject().put("msg", "ok").put("code","ok").put("data", false );
