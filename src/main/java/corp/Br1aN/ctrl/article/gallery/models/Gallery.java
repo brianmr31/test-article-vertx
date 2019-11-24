@@ -15,6 +15,8 @@ public class Gallery extends Model {
   private String gallery_tags;
   private long content_id;
 
+  private String gallery_app_company;
+
   private String gallery_created_by;
   private String gallery_created_at;
   private String gallery_updated_by;
@@ -46,10 +48,10 @@ public class Gallery extends Model {
     this.gallery_tags = gallery_tags;
   }
 
-  public Long getGalleryUrl(){
+  public Long getContentId(){
     return this.content_id;
   }
-  public void setGalleryUrl(Long content_id){
+  public void setContentId(Long content_id){
     this.content_id = content_id;
   }
 

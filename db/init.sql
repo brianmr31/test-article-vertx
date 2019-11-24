@@ -39,3 +39,46 @@ CREATE TABLE public."category" (
   category_updated_at timestamp NULL,
 	category_deleted_flag bool NULL
 );
+
+-- DROP TABLE public."template";
+CREATE TABLE public."template" (
+	template_id bigserial PRIMARY KEY,
+	template_name varchar(255) NULL,
+	template_params varchar(255) NULL,
+	template_app_company varchar(255) NULL,
+	template_desc varchar(255) NULL,
+	template_created_by varchar(255) NULL,
+	template_created_at timestamp NULL,
+  template_updated_by varchar(255) NULL,
+  template_updated_at timestamp NULL,
+	template_deleted_flag bool NULL
+);
+
+-- DROP TABLE public."content";
+CREATE TABLE public."content" (
+	content_id bigserial PRIMARY KEY,
+	content_title varchar(255) NULL,
+	content_text varchar(255) NULL,
+	content_publish varchar(255) NULL,
+	content_app_company varchar(255) NULL,
+	template_id bigint NULL,
+	content_created_by varchar(255) NULL,
+	content_created_at timestamp NULL,
+  content_updated_by varchar(255) NULL,
+  content_updated_at timestamp NULL,
+	content_deleted_flag bool NULL
+);
+
+-- DROP TABLE public."gallery";
+CREATE TABLE public."gallery" (
+	gallery_id bigserial PRIMARY KEY,
+	gallery_url varchar(255) NULL,
+	gallery_tags varchar(255) NULL,
+	content_id bigint NULL,
+	gallery_app_company varchar(255) NULL,
+	gallery_created_by varchar(255) NULL,
+	gallery_created_at timestamp NULL,
+  gallery_updated_by varchar(255) NULL,
+  gallery_updated_at timestamp NULL,
+	gallery_deleted_flag bool NULL
+);

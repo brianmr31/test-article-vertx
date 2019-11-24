@@ -16,6 +16,8 @@ public class Content extends Model {
   private String content_publish;
   private long template_id;
 
+  private String content_app_company;
+
   private String content_created_by;
   private String content_created_at;
   private String content_updated_by;
@@ -59,6 +61,13 @@ public class Content extends Model {
   }
   public void setTemplateId(Long template_id){
     this.template_id = template_id;
+  }
+
+  public String getTContentAppCompany(){
+    return this.content_app_company;
+  }
+  public void setContentAppCompany(String content_app_company){
+    this.content_app_company = content_app_company;
   }
 
   public String getContentCreatedBy(){

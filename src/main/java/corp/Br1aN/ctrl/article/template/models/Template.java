@@ -15,6 +15,8 @@ public class Template extends Model {
   private String template_params;
   private String template_desc;
 
+  private String template_app_company;
+
   private String template_created_by;
   private String template_created_at;
   private String template_updated_by;
@@ -47,10 +49,17 @@ public class Template extends Model {
   }
 
   public String getTemplateDesc(){
-    return this.template_desc
+    return this.template_desc;
   }
   public void setTemplateDesc(String template_desc){
     this.template_desc = template_desc;
+  }
+
+  public String getTemplateAppCompany(){
+    return this.template_app_company;
+  }
+  public void setTemplateAppCompany(String template_app_company){
+    this.template_app_company = template_app_company;
   }
 
   public String getTemplateCreatedBy(){
